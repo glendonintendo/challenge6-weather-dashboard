@@ -1,0 +1,23 @@
+main {
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+#forecast {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#forecast h3 {
+    width: 100%;
+}
+
+.day {
+    width: 15%;
+}
