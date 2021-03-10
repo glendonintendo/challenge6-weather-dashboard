@@ -8,6 +8,10 @@ h1 {
     margin: 0 auto;
 }
 
+image {
+    color: purple;
+}
+
 #forecast {
     display: flex;
     justify-content: space-between;
@@ -19,5 +23,47 @@ h1 {
 }
 
 .day {
-    width: 15%;
+    width: 18%;
+}
+
+#weather-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#weather-info div {
+    width: 40%;
+    font-size: 1.5rem;
+}
+
+#weather-icon {
+    width:30%;
+    height: auto;
+}
+
+.forecast-icon {
+    width: 50%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.day {
+    text-align: center;
+}
+
+.uv-favorable {
+    color: white;
+    background-color: green;
+}
+
+.uv-moderate {
+    color: white;
+    background-color: orange;
+}
+
+.uv-severe {
+    color: white;
+    border-color: red;
 }
