@@ -1,7 +1,28 @@
 const searchFormEl = document.querySelector("#search-form");
 const cityInputEl = document.querySelector("#city");
 const weatherEl = document.querySelector("#weather");
-const apiKey = "d3a330e6929f9f784d6290a5c6be1892"
+const apiKey = "d3a330e6929f9f784d6290a5c6be1892";
+
+const weatherIcons = {
+    "01d": "sun-fill.svg",
+    "01n": "moon-fill.svg",
+    "02d": "cloud-sun-fill.svg",
+    "02n": "cloud-moon-fill.svg",
+    "03d": "cloud-fill.svg",
+    "03n": "cloud-fill.svg",
+    "04d": "cloud-fill.svg",
+    "04n": "cloud-fill.svg",
+    "09d": "cloud-rain-fill.svg",
+    "09n": "cloud-rain-fill.svg",
+    "10d": "cloud-rain-fill.svg",
+    "10n": "cloud-rain-fill.svg",
+    "11d": "cloud-lightning-fill.svg",
+    "11n": "cloud-lightning-fill.svg",
+    "13d": "cloud-snow-fill.svg",
+    "13n": "cloud-snow-fill.svg",
+    "50d": "cloud-haze2--fill.svg",
+    "50n": "cloud-haze2-fill.svg"
+};
 
 // handler for clicking search button
 const formSubmitHandler = function(event) {
@@ -46,13 +67,16 @@ const displayLocationContent = function(data) {
     weatherEl.innerHTML = "";
 
     weatherEl.innerHTML = `
-        <h2 class="text-center">${getLocationString(data)} - ${moment().format("MM/DD/YYYY")}</h2>
-        <image id="weather-icon" />
-        <p id="temp"></p>
-        <p id="humidity"></p>
-        <p id="wind-speed"></p>
-        <p id="uv-index"></p>
-        
+        <h2 class="text-center">${getLocationString(data)} - ${moment().format("MMMM DD, YYYY")}</h2>
+        <div id="weather-info">
+            <image id="weather-icon" />
+            <div>
+                <p id="temp"></p>
+                <p id="humidity"></p>
+                <p id="wind-speed"></p>
+                <p id="uv-index"></p>
+            </div>
+        </div>
         <h3 class="text-center">5-Day Forecast</h3>
         <div id="forecast"></div>
     `
@@ -62,7 +86,7 @@ const displayLocationContent = function(data) {
         let forecastDayEl = document.createElement("div");
         forecastDayEl.className = "day card";
         forecastDayEl.innerHTML = `
-            <h4 class="card-header text-center">${moment().add(i, "days").format("MM/DD/YYYY")}</h4>
+            <h4 class="card-header text-center">${moment().add(i, "days").format("MMM Do")}</h4>
             <p class="card-text" id="day${i}"></p>
         `;
         forecastEl.appendChild(forecastDayEl);
@@ -80,20 +104,26 @@ const displayWeatherContent = function(data) {
     console.log(data);
     
     let weather = data.current;
-    document.querySelector("#weather-icon").setAttribute("src", `http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`);
+    document.querySelector("#weather-icon").setAttribute("src", `./assets/images/${weatherIcons[weather.weather[0].icon]}`);
     document.querySelector("#weather-icon").setAttribute("alt", `${weather.weather[0].description}`)
-    document.querySelector("#temp").innerHTML = kelToFahr(weather.temp);
-    document.querySelector("#humidity").innerHTML = weather.humidity;
-    document.querySelector("#wind-speed").innerHTML = weather.wind_speed;
-    document.querySelector("#uv-index").innerHTML = weather.uvi;
+    document.querySelector("#temp").innerHTML = `Temperature: ${kelToFahr(weather.temp)}F`;
+    document.querySelector("#humidity").innerHTML = `Humidity: ${weather.humidity}%`;
+    document.querySelector("#wind-speed").innerHTML = `Wind Speed: ${weather.wind_speed} MPH`;
+    document.querySelector("#uv-index").innerHTML = `UV Index: <span id="color-change">${weather.uvi}</span>`;
+
+    getUvStyles(weather.uvi);
 
 
     for (let i = 1; i <= 5; i++) {
         let dayForecastEl = document.querySelector(`#day${i}`);
         let forecast = data.daily[i - 1];
         dayForecastEl.innerHTML = `
-            <image src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="${forecast.weather[0].description}" />
-            ${kelToFahr(forecast.temp.day)}, ${forecast.humidity}, ${forecast.wind_speed}
+            <image class="forecast-icon" src="./assets/images/${weatherIcons[forecast.weather[0].icon]}" alt="${forecast.weather[0].description}" />
+            <div class="forecast-stat">
+                <p>Temperature: ${kelToFahr(forecast.temp.day)}F</p>
+                <p>Humidity: ${forecast.humidity}%</p>
+                <p>Wind Speed: ${forecast.wind_speed.toFixed(1)} MPH</p>
+            </div>
         `;
     }
 };
@@ -101,6 +131,17 @@ const displayWeatherContent = function(data) {
 // converts temperature from Kelvin to Fahrenheit to the tenths
 const kelToFahr = function(temp) {
     return ((temp - 273.15) * 9/5 + 32).toFixed(1);
+};
+
+const getUvStyles = function(uvi) {
+    let uviEl = document.querySelector("#color-change");
+    if (uvi < 3) {
+        uviEl.className = "uv-favorable";
+    } else if (uvi < 8) {
+        uviEl.className = "uv-moderate";
+    } else {
+        uviEl.className = "uv-severe";
+    }
 };
 
 searchFormEl.addEventListener("submit", formSubmitHandler);
