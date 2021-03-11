@@ -46,7 +46,6 @@ const previousSearchHandler = function(event) {
     event.preventDefault();
     let previousCity = event.target;
 
-    console.log(previousCity);
     if (previousCity.classList.contains("previous-city")) {
         cityForStorage = previousCity.innerHTML;
         getLocation(previousCity.innerHTML);
@@ -120,9 +119,7 @@ const getLocationString = function(data) {
     return `${data[0].name}, ${data[0].country}`;
 };
 
-const displayWeatherContent = function(data) {
-    console.log(data);
-    
+const displayWeatherContent = function(data) {    
     let weather = data.current;
     document.querySelector("#weather-icon").setAttribute("src", `./assets/images/${weatherIcons[weather.weather[0].icon]}`);
     document.querySelector("#weather-icon").setAttribute("alt", `${weather.weather[0].description}`)
@@ -168,7 +165,6 @@ const getUvStyles = function(uvi) {
 const setCity = function(city) {
     if (citiesForStorage.includes(city)) {
         let cityIndex = citiesForStorage.indexOf(city);
-        console.log(cityIndex);
         citiesForStorage.splice(cityIndex, 1);
         citiesForStorage.unshift(city);
     } else {
