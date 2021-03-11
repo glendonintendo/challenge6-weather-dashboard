@@ -6,6 +6,8 @@ h1 {
     text-align: center;
     display: block;
     margin: 0 auto;
+    background-color: grey;
+    padding: 5px 0;
 }
 
 image {
@@ -66,4 +68,20 @@ image {
 .uv-severe {
     color: white;
     border-color: red;
+}
+
+#color-change {
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
+#searched-cities {
+    text-align: center;
+}
+
+.previous-city {
+    border: 2px solid black;
+    width: 80%;
+    text-align: center;
+    margin: 5px 0;
 }
