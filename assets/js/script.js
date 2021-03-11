@@ -55,7 +55,7 @@ const previousSearchHandler = function(event) {
 
 // get longitude and latitude of city using openweather api with city name
 const getLocation = function(city) {
-    let locationApiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
+    let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
     fetch(locationApiUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
