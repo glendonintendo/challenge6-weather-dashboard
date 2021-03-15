@@ -35,7 +35,6 @@ const formSubmitHandler = function(event) {
     let cityName = cityInputEl.value.trim();
 
     if (cityName) {
-        cityForStorage = cityName;
         getLocation(cityName);
     } else {
         alert("Please enter the name of a city.")
@@ -47,8 +46,8 @@ const previousSearchHandler = function(event) {
     let previousCity = event.target;
 
     if (previousCity.classList.contains("previous-city")) {
-        cityForStorage = previousCity.innerHTML;
-        getLocation(previousCity.innerHTML);
+        cityForStorage = previousCity.innerHTML.split(",")[0];
+        getLocation(cityForStorage);
     }
 }
 
@@ -61,6 +60,7 @@ const getLocation = function(city) {
                 if (data.length === 0) {
                     return window.alert("Please enter a valid city.");
                 }
+                cityForStorage = getLocationString(data);
                 displayLocationContent(data);
                 setCity(cityForStorage);
                 getForecast(data[0].lat, data[0].lon);
@@ -84,9 +84,8 @@ const getForecast = function(lat, lon) {
 // create and populates location information from getLocation call
 const displayLocationContent = function(data) {
     weatherEl.innerHTML = "";
-
     weatherEl.innerHTML = `
-        <h2 class="text-center">${getLocationString(data)} - ${moment().format("MMMM DD, YYYY")}</h2>
+        <h2 class="text-center" id="weather-header"></h2>
         <div id="weather-info">
             <image id="weather-icon" />
             <div>
@@ -105,7 +104,7 @@ const displayLocationContent = function(data) {
         let forecastDayEl = document.createElement("div");
         forecastDayEl.className = "day card";
         forecastDayEl.innerHTML = `
-            <h4 class="card-header text-center">${moment().add(i, "days").format("MMM Do")}</h4>
+            <h4 class="card-header text-center">${dayjs().add(i, "days").format("MMM D")}</h4>
             <p class="card-text" id="day${i}"></p>
         `;
         forecastEl.appendChild(forecastDayEl);
@@ -119,7 +118,9 @@ const getLocationString = function(data) {
     return `${data[0].name}, ${data[0].country}`;
 };
 
-const displayWeatherContent = function(data) {    
+const displayWeatherContent = function(data) {
+    document.querySelector("#weather-header").innerHTML = `${cityForStorage} - ${dayjs().format("MMMM DD, YYYY")}`;
+    
     let weather = data.current;
     document.querySelector("#weather-icon").setAttribute("src", `./assets/images/${weatherIcons[weather.weather[0].icon]}`);
     document.querySelector("#weather-icon").setAttribute("alt", `${weather.weather[0].description}`)
